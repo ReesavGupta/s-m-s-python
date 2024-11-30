@@ -1,0 +1,20 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+.venv/
+env/
+*.env
+
+# FastAPI & Uvicorn
+.vscode/
+.idea/
+*.log
+
+# Pytest
+.pytest_cache/
+
+# OS generated files
+.DS_Store
+Thumbs.db
