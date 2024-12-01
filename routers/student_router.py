@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Query
-from controllers.student_controller import create_student, list_students, fetch_student
+from fastapi import APIRouter, Query, Path, Body
+from controllers.student_controller import create_student, list_students, fetch_student, update_student
 from models.student_model import Student
 from typing import Optional
 
@@ -19,3 +19,10 @@ async def list_students_route(
 @router.get("/{id}", status_code=200)
 async def fetch_student_route(id: str):
     return await fetch_student(id=id)
+
+@router.patch("/{id}", status_code=204)
+async def update_student_route(
+    id: str = Path(..., description="The ID of the student to update"),
+    update_data: dict = Body(..., description="The fields to update"),
+):
+    return await update_student(id, update_data)

@@ -47,20 +47,37 @@ async def list_students(country: Optional[str] = None, age: Optional[int] = None
     return {"data": [format_student(student) for student in res_students]}
 
 async def fetch_student(id: str):
-    try:
-        print(id)
-        if not ObjectId.is_valid(id):
-            raise HTTPException(status_code=400, detail="bad id")
-        
-        student = await students_collection.find_one({"_id":ObjectId(id) })
-        
-        print(student)
-        formatted_student= format_student(student)
-        if student:
-            return {"student":formatted_student}
-        else:
-            raise HTTPException(status_code=404, detail="not found")
-    except Exception as e: 
-        print('Error getting back the student:', e)
-        raise HTTPException(status_code=500, detail="Failed to GET student")
+    # Validate the ID
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid student ID")
 
+    # Fetch the student from the database
+    student = await students_collection.find_one({"_id": ObjectId(id)})
+
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+
+    # Format and return the student document
+    return format_student(student)
+
+async def update_student(id: str, update_data: dict):
+    # Validate the ID
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid student ID")
+    
+    # Ensure at least one field is provided for the update
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No data provided to update")
+
+    try:
+        # Attempt to update the student
+        result = await students_collection.update_one(
+            {"_id": ObjectId(id)}, {"$set": update_data}
+        )
+
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Student not found")
+        
+    except Exception as e:
+        print("Error updating student:", e)
+        raise HTTPException(status_code=500, detail="Failed to update student")
