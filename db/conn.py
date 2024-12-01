@@ -9,10 +9,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 client = AsyncIOMotorClient(MONGO_DETAILS)
 
-#access the student db
 database = client.student
 
-#access the students collection
 students_collection = database.get_collection("students")
 
 try:
