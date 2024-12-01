@@ -81,3 +81,20 @@ async def update_student(id: str, update_data: dict):
     except Exception as e:
         print("Error updating student:", e)
         raise HTTPException(status_code=500, detail="Failed to update student")
+    
+async def delete_student(id: str):
+    # Validate the ID
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid student ID")
+    
+    try:
+        # Attempt to delete the student
+        result = await students_collection.delete_one({"_id": ObjectId(id)})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Student not found")
+        
+        return {"message": "Student deleted successfully"}
+    except Exception as e:
+        print("Error deleting student:", e)
+        raise HTTPException(status_code=500, detail="Failed to delete student")

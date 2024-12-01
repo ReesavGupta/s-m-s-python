@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Query, Path, Body
-from controllers.student_controller import create_student, list_students, fetch_student, update_student
+from controllers.student_controller import create_student,list_students, fetch_student, update_student, delete_student
 from models.student_model import Student
 from typing import Optional
 
@@ -26,3 +26,9 @@ async def update_student_route(
     update_data: dict = Body(..., description="The fields to update"),
 ):
     return await update_student(id, update_data)
+
+@router.delete("/{id}", status_code=200)
+async def delete_student_route(
+    id: str = Path(..., description="The ID of the student to delete")
+):
+    return await delete_student(id)
