@@ -4,9 +4,14 @@ from db.conn import students_collection
 from bson import ObjectId
 from typing import Optional
 import configparser
+from pathlib import Path
+
+# Set up the path to the messages.properties file
+base_path = Path(__file__).resolve().parent
+config_path = base_path.parent / 'messages.properties'
 
 config = configparser.ConfigParser()
-config.read('messages.properties')
+config.read(config_path)
 
 # Helper function to format a MongoDB document before returning it
 def format_student(student):
