@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Query
-from controllers.student_controller import create_student, list_students
+from controllers.student_controller import create_student, list_students, fetch_student
 from models.student_model import Student
 from typing import Optional
 
@@ -15,3 +15,7 @@ async def list_students_route(
     age: Optional[int] = Query(None, description="Filter by minimum age")
 ):
     return await list_students(country=country, age=age)
+
+@router.get("/{id}", status_code=200)
+async def fetch_student_route(id: str):
+    return await fetch_student(id=id)
